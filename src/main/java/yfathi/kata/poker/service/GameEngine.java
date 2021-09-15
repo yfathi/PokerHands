@@ -26,6 +26,7 @@ public class GameEngine {
         rules.add(new FlushRule());
         rules.add(new StraightRule());
         rules.add(new ThreeOfKindRule());
+        rules.add(new TwoPairsRule());
     }
 
     public void play(String input) {
