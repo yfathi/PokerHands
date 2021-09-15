@@ -9,6 +9,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * The type Game engine.
+ */
 public class GameEngine {
 
 
@@ -16,6 +19,9 @@ public class GameEngine {
     private final List<Consumer<PlayerHand>> rules;
     private PlayerHand currentWinner;
 
+    /**
+     * Instantiates a new Game engine.
+     */
     public GameEngine() {
         this.rules = new ArrayList<>();
         this.players = new ArrayList<>();
@@ -27,16 +33,29 @@ public class GameEngine {
         rules.add(new StraightRule());
         rules.add(new ThreeOfKindRule());
         rules.add(new TwoPairsRule());
+        rules.add(new PairRule());
+        rules.add(new HighCardRule());
     }
 
+    /**
+     * Play.
+     *
+     * @param input the input
+     */
     public void play(String input) {
         handleInput(input);
         checkRules();
         computeOutcome();
     }
 
+    /**
+     * Handle input.
+     *
+     * @param input the input
+     */
     protected void handleInput(String input) {
         this.players = new ArrayList<>();
+        this.currentWinner=null;
         Arrays.stream(input.split(",")).forEach(
                 p -> {
                     var name = p.split(":")[0];
@@ -50,24 +69,45 @@ public class GameEngine {
         );
     }
 
+    /**
+     * Check rules.
+     */
     protected void checkRules() {
         players.forEach(playerHand ->
                 rules.forEach(playerHandConsumer -> playerHandConsumer.accept(playerHand))
         );
     }
 
+    /**
+     * Gets rules.
+     *
+     * @return the rules
+     */
     public List<Consumer<PlayerHand>> getRules() {
         return rules;
     }
 
+    /**
+     * Gets current winner.
+     *
+     * @return the current winner
+     */
     public PlayerHand getCurrentWinner() {
         return currentWinner;
     }
 
+    /**
+     * Sets current winner.
+     *
+     * @param currentWinner the current winner
+     */
     public void setCurrentWinner(PlayerHand currentWinner) {
         this.currentWinner = currentWinner;
     }
 
+    /**
+     * Compute outcome.
+     */
     protected void computeOutcome() {
         players.sort(PlayerHand::compareTo);
         if(players.get(players.size() - 1).compareTo(players.get(players.size()-2))>0){
@@ -77,7 +117,11 @@ public class GameEngine {
     }
 
 
-
+    /**
+     * Gets players.
+     *
+     * @return the players
+     */
     public List<PlayerHand> getPlayers() {
         return players;
     }

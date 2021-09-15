@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+/**
+ * The type Three of kind rule.
+ */
 public class ThreeOfKindRule implements Consumer<PlayerHand> {
 
     @Override

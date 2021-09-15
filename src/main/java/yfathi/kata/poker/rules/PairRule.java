@@ -12,25 +12,26 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
- * The type Full house rule.
+ * The type Pair rule.
  */
-public class FullHouseRule implements Consumer<PlayerHand> {
+public class PairRule implements Consumer<PlayerHand> {
 
     @Override
     public void accept(PlayerHand playerHand) {
         final List<Card> cards = playerHand.getCards().stream().filter(Card::isFree).collect(Collectors.toList());
         if (cards.size()<2) return;
-        final Integer threeOfKind =  ScoreUtils.computSameValueScore(cards, 3);
-        final Integer pairValue= ScoreUtils.computSameValueScore(cards.stream().filter(card -> card.getScore()!= threeOfKind).collect(Collectors.toList()), 2);
+        final Integer pair =  ScoreUtils.computSameValueScore(cards, 2);
 
         // if 4 cards has same value (fourOfKind Score
-        if (!threeOfKind.equals(0) && !pairValue.equals(0)) {
+        if (!pair.equals(0) ) {
             // Set Full House
-            playerHand.setHandOutcome(HandOutcome.FH);
-            playerHand.setHigherHand(threeOfKind);
+            playerHand.setHandOutcome(HandOutcome.PR);
+            playerHand.setHigherHand(pair);
             // Set Higher hand (in case of Tie) and burn
             for (Card card : playerHand.getCards()) {
-                        card.setFree(false);
+                if (card.getScore().equals(pair)) {
+                    card.setFree(false);
+                }
             }
         }
     }

@@ -37,6 +37,7 @@ public class PokerTest {
     void testTie()  {
         ge.play("Black: 2H 3H 4H 5H 6H ,White: 2C 3C 4C 5C 6C");
         Assertions.assertNull(ge.getCurrentWinner());
+        System.out.println("Tie");
     }
     @Test
     void testFourOfKind()  {
@@ -111,22 +112,60 @@ public class PokerTest {
 
         Assertions.assertEquals("White",ge.getCurrentWinner().getPlayer());
     }
+    @Test
+    void testTwoPairsTie()  {
+
+        ge.play("Black: 2H 2D TH 3C 3H ,White: 3H 2C 2H 3S 7D");
+        Assertions.assertNotNull(ge.getCurrentWinner());
+        Assertions.assertEquals(HandOutcome.TPR, ge.getCurrentWinner().getHandOutcome());
+        Assertions.assertEquals("Black",ge.getCurrentWinner().getPlayer());
+    }
 
     @Test
     void testPair()  {
-        ge.play("Black: 2H 2D 4H 5C 6H ,White: 3H 5C 5H 3S 7D");
+        ge.play("Black: KH 2D KH 5C 6H ,White: 3H 4C 5H 3S 7D");
         Assertions.assertNotNull(ge.getCurrentWinner());
         Assertions.assertEquals(HandOutcome.PR, ge.getCurrentWinner().getHandOutcome());
+        Assertions.assertEquals("Black",ge.getCurrentWinner().getPlayer());
 
+        ge.play("Black: 4H 2D 4D 5C 6H ,White: 5H 4C 5H 3S 7D");
+        Assertions.assertNotNull(ge.getCurrentWinner());
+        Assertions.assertEquals(HandOutcome.PR, ge.getCurrentWinner().getHandOutcome());
+        Assertions.assertEquals("White",ge.getCurrentWinner().getPlayer());
+
+    }
+
+    @Test
+    void testPairTie()  {
+
+        ge.play("Black: 4H 2D 4D 5C 6H ,White: 4H 4D 2H 5S 3D");
+        Assertions.assertNotNull(ge.getCurrentWinner());
+        Assertions.assertEquals(HandOutcome.PR, ge.getCurrentWinner().getHandOutcome());
         Assertions.assertEquals("Black",ge.getCurrentWinner().getPlayer());
     }
     @Test
     void testHighCard()  {
-        ge.play("Black: KH 3D 4H 5S 6H ,White: 3H 5C 5H 3S 7D");
+        ge.play("Black: KH 3D 4H 5S 6H ,White: AH 6C 5H 2S 7D");
+        Assertions.assertNotNull(ge.getCurrentWinner());
+        Assertions.assertEquals(HandOutcome.HC, ge.getCurrentWinner().getHandOutcome());
+
+        Assertions.assertEquals("White",ge.getCurrentWinner().getPlayer());
+
+        ge.play("Black: KH 3D 4H 5S 6H ,White: TH 6C 5H 2S 7D");
         Assertions.assertNotNull(ge.getCurrentWinner());
         Assertions.assertEquals(HandOutcome.HC, ge.getCurrentWinner().getHandOutcome());
 
         Assertions.assertEquals("Black",ge.getCurrentWinner().getPlayer());
+    }
+
+    @Test
+    void testHighCardTie()  {
+        ge.play("Black: KH 3D 4H 5S 6H ,White: AH 6C 5H 2S 7D");
+        Assertions.assertNotNull(ge.getCurrentWinner());
+        Assertions.assertEquals(HandOutcome.HC, ge.getCurrentWinner().getHandOutcome());
+
+        Assertions.assertEquals("White",ge.getCurrentWinner().getPlayer());
+
     }
 
 }

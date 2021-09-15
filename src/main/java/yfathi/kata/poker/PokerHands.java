@@ -2,8 +2,16 @@ package yfathi.kata.poker;
 
 import yfathi.kata.poker.service.GameEngine;
 
+/**
+ * The type Poker hands.
+ */
 public class PokerHands {
 
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
     public static void main(String[] args) {
         GameEngine ge =new GameEngine();
 

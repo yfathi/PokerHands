@@ -2,6 +2,9 @@ package yfathi.kata.poker.model;
 
 import java.util.Objects;
 
+/**
+ * The type Card.
+ */
 public class Card implements Comparable<Card>{
 
     private final Color color;
@@ -9,24 +12,49 @@ public class Card implements Comparable<Card>{
     private boolean free=true;
 
 
+    /**
+     * Instantiates a new Card.
+     *
+     * @param input the input
+     */
     public Card(String input) {
         this.number = Number.valueOf("_"+input.substring(0,1));
         this.color = Color.valueOf(input.substring(1,2));
     }
 
+    /**
+     * Gets color.
+     *
+     * @return the color
+     */
     public Color getColor() {
         return color;
     }
 
 
+    /**
+     * Gets number.
+     *
+     * @return the number
+     */
     public Number getNumber() {
         return number;
     }
 
+    /**
+     * Is free boolean.
+     *
+     * @return the boolean
+     */
     public boolean isFree() {
         return free;
     }
 
+    /**
+     * Sets free.
+     *
+     * @param free the free
+     */
     public void setFree(boolean free) {
         this.free = free;
     }
@@ -39,6 +67,11 @@ public class Card implements Comparable<Card>{
         return number == card.number && color == card.color;
     }
 
+    /**
+     * Get score integer.
+     *
+     * @return the integer
+     */
     public Integer getScore(){
       return   this.getNumber().getScore();
     }

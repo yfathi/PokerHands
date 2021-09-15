@@ -11,13 +11,15 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+/**
+ * The type Two pairs rule.
+ */
 public class TwoPairsRule implements Consumer<PlayerHand> {
 
     @Override
     public void accept(PlayerHand playerHand) {
         final List<Card> cards = playerHand.getCards().stream().filter(Card::isFree).collect(Collectors.toList());
         if (cards.size()<2) return;
-        final Map<Integer, Integer> countMap = new HashMap<>();
         final Integer firstPair =  ScoreUtils.computSameValueScore(cards, 2);
         final Integer secondPair =  ScoreUtils.computSameValueScore(cards.stream().filter(card -> card.getScore()!=firstPair).collect(Collectors.toList()), 2);
 

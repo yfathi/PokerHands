@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+/**
+ * The type Straight rule.
+ */
 public class StraightRule implements Consumer<PlayerHand> {
 
     @Override
