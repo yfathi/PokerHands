@@ -18,6 +18,8 @@ public class StraightFlushRule implements Consumer<PlayerHand> {
             playerHand.setHandOutcome(HandOutcome.STRFH);
             // Set Higherhand (in case of Tie)
             playerHand.setHigherHand(cards.get(cards.size()-1).getNumber().getScore());
+            // Burn All the cards
+            cards.forEach(card -> card.setFree(false));
         }
     }
 }

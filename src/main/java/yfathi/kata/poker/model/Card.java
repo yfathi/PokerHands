@@ -39,6 +39,10 @@ public class Card implements Comparable<Card>{
         return number == card.number && color == card.color;
     }
 
+    public Integer getScore(){
+      return   this.getNumber().getScore();
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(color, number);
@@ -53,4 +57,6 @@ public class Card implements Comparable<Card>{
     public int compareTo(Card o) {
         return this.getNumber().getScore()-o.getNumber().getScore();
     }
+
+
 }

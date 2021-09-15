@@ -14,7 +14,7 @@ public class ScoreUtils {
     public static boolean isConsecutive(List<Card> cards){
         var consecutive =true;
         for (int i = 1; i < cards.size()-1; i++) {
-            if(cards.get(i).compareTo(cards.get(i-1))>1){
+            if(cards.get(i).compareTo(cards.get(i - 1)) != 1){
                 consecutive = false;
                 break;
             }

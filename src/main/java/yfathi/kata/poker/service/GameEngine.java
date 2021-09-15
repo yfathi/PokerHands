@@ -2,6 +2,7 @@ package yfathi.kata.poker.service;
 
 import yfathi.kata.poker.model.Card;
 import yfathi.kata.poker.model.PlayerHand;
+import yfathi.kata.poker.rules.FourOfKindRule;
 import yfathi.kata.poker.rules.StraightFlushRule;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class GameEngine {
         this.rules = new ArrayList<>();
         this.players = new ArrayList<>();
         rules.add(new StraightFlushRule());
+        rules.add(new FourOfKindRule());
     }
 
     public void play(String input) {
