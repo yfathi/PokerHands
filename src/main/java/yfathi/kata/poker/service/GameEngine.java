@@ -2,10 +2,7 @@ package yfathi.kata.poker.service;
 
 import yfathi.kata.poker.model.Card;
 import yfathi.kata.poker.model.PlayerHand;
-import yfathi.kata.poker.rules.FlushRule;
-import yfathi.kata.poker.rules.FourOfKindRule;
-import yfathi.kata.poker.rules.FullHouseRule;
-import yfathi.kata.poker.rules.StraightFlushRule;
+import yfathi.kata.poker.rules.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,27 +12,30 @@ import java.util.function.Consumer;
 public class GameEngine {
 
 
-    private final List<PlayerHand> players;
+    private  List<PlayerHand> players;
     private final List<Consumer<PlayerHand>> rules;
     private PlayerHand currentWinner;
 
     public GameEngine() {
         this.rules = new ArrayList<>();
         this.players = new ArrayList<>();
+        // Order is Crucial
         rules.add(new StraightFlushRule());
         rules.add(new FourOfKindRule());
         rules.add(new FullHouseRule());
         rules.add(new FlushRule());
+        rules.add(new StraightRule());
+        rules.add(new ThreeOfKindRule());
     }
 
     public void play(String input) {
         handleInput(input);
-
         checkRules();
         computeOutcome();
     }
 
     protected void handleInput(String input) {
+        this.players = new ArrayList<>();
         Arrays.stream(input.split(",")).forEach(
                 p -> {
                     var name = p.split(":")[0];

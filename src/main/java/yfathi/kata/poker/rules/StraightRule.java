@@ -7,16 +7,18 @@ import yfathi.kata.poker.utils.ScoreUtils;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
-public class StraightFlushRule implements Consumer<PlayerHand> {
+public class StraightRule implements Consumer<PlayerHand> {
 
     @Override
     public void accept(PlayerHand playerHand) {
-        final List<Card> cards = playerHand.getCards();
+        final List<Card> cards = playerHand.getCards().stream().filter(Card::isFree).collect(Collectors.toList());
         if (cards.size()<2) return;
-        if (ScoreUtils.isSameColor(cards) && ScoreUtils.isConsecutive(cards)) {
-            // Set Straight Flush
-            playerHand.setHandOutcome(HandOutcome.STRFH);
+
+        if (ScoreUtils.isConsecutive(cards)) {
+            // Set Straight
+            playerHand.setHandOutcome(HandOutcome.STR);
             // Set Higherhand (in case of Tie)
             playerHand.setHigherHand(cards.get(cards.size()-1).getNumber().getScore());
             // Burn All the cards

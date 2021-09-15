@@ -90,8 +90,12 @@ public class PokerTest {
         ge.play("Black: 2H 2C 2D 5D 6H ,White: 3H 5C 5H 3S 7D");
         Assertions.assertNotNull(ge.getCurrentWinner());
         Assertions.assertEquals(HandOutcome.TK, ge.getCurrentWinner().getHandOutcome());
-
         Assertions.assertEquals("Black",ge.getCurrentWinner().getPlayer());
+
+        ge.play("Black: 2H 2C 2D 5D 6H ,White: 3H 3C 5H 3S 7D");
+        Assertions.assertNotNull(ge.getCurrentWinner());
+        Assertions.assertEquals(HandOutcome.TK, ge.getCurrentWinner().getHandOutcome());
+        Assertions.assertEquals("White",ge.getCurrentWinner().getPlayer());
     }
     @Test
     void testTwoPairs()  {
