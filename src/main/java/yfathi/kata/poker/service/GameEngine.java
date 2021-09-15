@@ -63,8 +63,10 @@ public class GameEngine {
 
     protected void computeOutcome() {
         players.sort(PlayerHand::compareTo);
-       currentWinner = players.get(players.size() - 1);
-
+        if(players.get(players.size() - 1).compareTo(players.get(players.size()-2))>0){
+            // if No TIE determine the winner
+            currentWinner = players.get(players.size() - 1);
+        }
     }
 
 
