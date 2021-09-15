@@ -4,7 +4,7 @@ public enum HandOutcome {
     HC("High Card", 0),
     PR("Pair", 100),
     TPR("Two Pairs", 200),
-    TK("Three of a Kinf", 300),
+    TK("Three of a Kind", 300),
     STR("Straight", 400),
     FLS("Flush", 500),
     FOK("Four of a Kind ", 600),

@@ -3,7 +3,9 @@ package yfathi.kata.poker.utils;
 import yfathi.kata.poker.model.Card;
 import yfathi.kata.poker.model.Color;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ScoreUtils {
 
@@ -20,5 +22,23 @@ public class ScoreUtils {
             }
         }
         return consecutive;
+    }
+    public static Integer computSameValueScore(List<Card> cards, Integer sameValue) {
+        final Map<Integer, Integer> countMap = new HashMap<>();
+
+        Integer scoreSameValue =0;
+        for (Card card : cards) {
+            final Integer score = card.getScore();
+            if (countMap.containsKey(score)) {
+                countMap.put(score, countMap.get(score )+1);
+
+                if (countMap.get(score).equals(sameValue)) {
+                    scoreSameValue = score;
+                }
+            } else {
+                countMap.put(score, 1);
+            }
+        }
+        return scoreSameValue;
     }
 }
