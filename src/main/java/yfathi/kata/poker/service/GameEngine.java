@@ -3,11 +3,13 @@ package yfathi.kata.poker.service;
 import yfathi.kata.poker.model.Card;
 import yfathi.kata.poker.model.PlayerHand;
 import yfathi.kata.poker.rules.*;
+import yfathi.kata.poker.utils.ScoreUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * The type Game engine.
@@ -110,9 +112,18 @@ public class GameEngine {
      */
     protected void computeOutcome() {
         players.sort(PlayerHand::compareTo);
-        if(players.get(players.size() - 1).compareTo(players.get(players.size()-2))>0){
+        final PlayerHand playerHand1 = players.get(players.size() - 1);
+        final PlayerHand playerHand2 = players.get(players.size() - 2);
+        if(playerHand1.compareTo(playerHand2)>0){
             // if No TIE determine the winner
-            currentWinner = players.get(players.size() - 1);
+            currentWinner = playerHand1;
+        }else{
+            final List<Card> cards1 = playerHand1.getCards().stream().filter(Card::isFree).collect(Collectors.toList());
+            final List<Card> cards2 = playerHand2.getCards().stream().filter(Card::isFree).collect(Collectors.toList());
+            final Integer compareTie = ScoreUtils.compareTie(cards1, cards2);
+            if(compareTie !=0){
+                currentWinner=players.get(players.size() - compareTie);
+            }
         }
     }
 
