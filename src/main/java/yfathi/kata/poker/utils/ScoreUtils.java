@@ -1,11 +1,10 @@
 package yfathi.kata.poker.utils;
 
-import yfathi.kata.poker.model.Card;
-import yfathi.kata.poker.model.Color;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import yfathi.kata.poker.model.Card;
+import yfathi.kata.poker.model.Color;
 
 /**
  * The type Score utils.
@@ -47,7 +46,7 @@ public class ScoreUtils {
      * @param sameValue the same value
      * @return the integer
      */
-    public static Integer computSameValueScore(List<Card> cards, Integer sameValue) {
+    public static Integer computeSameValueScore(List<Card> cards, Integer sameValue) {
         final Map<Integer, Integer> countMap = new HashMap<>();
 
         Integer scoreSameValue =0;
@@ -65,4 +64,20 @@ public class ScoreUtils {
         }
         return scoreSameValue;
     }
+
+
+    public static Integer compareTie(List<Card> cards1,List<Card> cards2) {
+        cards1.sort(Card::compareTo);
+        cards2.sort(Card::compareTo);
+        for (int i = cards1.size()-1; i >-1; i--) {
+            final int compare = cards1.get(i).compareTo(cards2.get(i));
+            if(compare >0){
+                return 1;
+            }else if(compare<0){
+                return 2;
+            }
+        }
+       return 0;
+    }
+
 }

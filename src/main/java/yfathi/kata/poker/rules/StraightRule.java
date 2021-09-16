@@ -1,31 +1,34 @@
 package yfathi.kata.poker.rules;
 
+import java.util.Optional;
+import java.util.function.Function;
 import yfathi.kata.poker.model.Card;
 import yfathi.kata.poker.model.HandOutcome;
+import yfathi.kata.poker.model.HandRanking;
 import yfathi.kata.poker.model.PlayerHand;
 import yfathi.kata.poker.utils.ScoreUtils;
 
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * The type Straight rule.
  */
-public class StraightRule implements Consumer<PlayerHand> {
+public class StraightRule implements Function<PlayerHand, Optional<HandRanking>> {
 
-    @Override
-    public void accept(PlayerHand playerHand) {
-        final List<Card> cards = playerHand.getCards().stream().filter(Card::isFree).collect(Collectors.toList());
-        if (cards.size()<2) return;
+@Override
+public Optional<HandRanking> apply(PlayerHand playerHand) {
+        final List<Card> cards = playerHand.getCards();
 
         if (ScoreUtils.isConsecutive(cards)) {
+            var handRanking= new HandRanking(playerHand.getPlayer(),playerHand.getCards());
             // Set Straight
-            playerHand.setHandOutcome(HandOutcome.STR);
+            handRanking.setHandOutcome(HandOutcome.STR);
             // Set Higherhand (in case of Tie)
-            playerHand.setHigherHand(cards.get(cards.size()-1).getNumber().getScore());
+            handRanking.setHigherHand(cards.get(cards.size()-1).getNumber().getScore());
             // Burn All the cards
-            playerHand.getCards().forEach(card -> card.setFree(false));
+            handRanking.getCards().forEach(card -> card.setFree(false));
+            return Optional.of(handRanking);
         }
+        return Optional.empty();
     }
 }

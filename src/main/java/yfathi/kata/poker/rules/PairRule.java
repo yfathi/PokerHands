@@ -1,39 +1,41 @@
 package yfathi.kata.poker.rules;
 
+import java.util.Optional;
+import java.util.function.Function;
 import yfathi.kata.poker.model.Card;
 import yfathi.kata.poker.model.HandOutcome;
+import yfathi.kata.poker.model.HandRanking;
 import yfathi.kata.poker.model.PlayerHand;
 import yfathi.kata.poker.utils.ScoreUtils;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * The type Pair rule.
  */
-public class PairRule implements Consumer<PlayerHand> {
+public class PairRule implements Function<PlayerHand, Optional<HandRanking>> {
 
-    @Override
-    public void accept(PlayerHand playerHand) {
-        final List<Card> cards = playerHand.getCards().stream().filter(Card::isFree).collect(Collectors.toList());
-        if (cards.size()<2) return;
-        final Integer pair =  ScoreUtils.computSameValueScore(cards, 2);
+@Override
+public Optional<HandRanking> apply(PlayerHand playerHand) {
+        final List<Card> cards = playerHand.getCards();
+
+        final Integer pair =  ScoreUtils.computeSameValueScore(cards, 2);
 
         // if 4 cards has same value (fourOfKind Score
         if (!pair.equals(0) ) {
+            var handRanking= new HandRanking(playerHand.getPlayer(),playerHand.getCards());
             // Set Full House
-            playerHand.setHandOutcome(HandOutcome.PR);
-            playerHand.setHigherHand(pair);
+            handRanking.setHandOutcome(HandOutcome.PR);
+            handRanking.setHigherHand(pair);
             // Set Higher hand (in case of Tie) and burn
-            for (Card card : playerHand.getCards()) {
+            for (Card card : handRanking.getCards()) {
                 if (card.getScore().equals(pair)) {
                     card.setFree(false);
                 }
             }
+            return Optional.of(handRanking);
         }
+        return Optional.empty();
     }
 
 }
