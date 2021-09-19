@@ -1,15 +1,14 @@
 package yfathi.kata.poker.service;
 
+import static java.util.stream.Collectors.toList;
+
 import yfathi.kata.poker.model.Card;
+import yfathi.kata.poker.model.HandRanking;
 import yfathi.kata.poker.model.PlayerHand;
-import yfathi.kata.poker.rules.*;
 import yfathi.kata.poker.utils.ScoreUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * The type Game engine.
@@ -18,25 +17,22 @@ public class GameEngine {
 
 
     private  List<PlayerHand> players;
-    private final List<Consumer<PlayerHand>> rules;
-    private PlayerHand currentWinner;
+    private List<HandRanking> results;
+
+    private HandRanking currentWinner;
+    private GameRankingCalculator gameRankingCalculator;
+    private GameInputReader gameInputReader;
 
     /**
      * Instantiates a new Game engine.
+     * @param gameRankingCalculator
+     * @param gameInputReader
      */
-    public GameEngine() {
-        this.rules = new ArrayList<>();
+    public GameEngine(GameRankingCalculator gameRankingCalculator,
+        GameInputReader gameInputReader) {
+        this.gameRankingCalculator = gameRankingCalculator;
+        this.gameInputReader = gameInputReader;
         this.players = new ArrayList<>();
-        // Order is Crucial
-        rules.add(new StraightFlushRule());
-        rules.add(new FourOfKindRule());
-        rules.add(new FullHouseRule());
-        rules.add(new FlushRule());
-        rules.add(new StraightRule());
-        rules.add(new ThreeOfKindRule());
-        rules.add(new TwoPairsRule());
-        rules.add(new PairRule());
-        rules.add(new HighCardRule());
     }
 
     /**
@@ -45,56 +41,28 @@ public class GameEngine {
      * @param input the input
      */
     public void play(String input) {
-        handleInput(input);
-        checkRules();
+        this.players= gameInputReader.handleInput(input);
+        applyRules();
         computeOutcome();
     }
 
     /**
-     * Handle input.
-     *
-     * @param input the input
+     * Apply rules.
      */
-    protected void handleInput(String input) {
-        this.players = new ArrayList<>();
-        this.currentWinner=null;
-        Arrays.stream(input.split(",")).forEach(
-                p -> {
-                    var name = p.split(":")[0];
-                    var cardInput = p.split(":")[1];
-                    List<Card> cards = new ArrayList<>();
-                    Arrays.stream(cardInput.trim().split(" ")).forEach(
-                            c -> cards.add(new Card(c))
-                    );
-                    players.add(new PlayerHand(name, cards));
-                }
-        );
+    public void applyRules() {
+       this.results=  players.stream().map(playerHand ->
+           gameRankingCalculator.compute(playerHand)
+        ).collect(toList());
     }
 
-    /**
-     * Check rules.
-     */
-    protected void checkRules() {
-        players.forEach(playerHand ->
-                rules.forEach(playerHandConsumer -> playerHandConsumer.accept(playerHand))
-        );
-    }
 
-    /**
-     * Gets rules.
-     *
-     * @return the rules
-     */
-    public List<Consumer<PlayerHand>> getRules() {
-        return rules;
-    }
 
     /**
      * Gets current winner.
      *
      * @return the current winner
      */
-    public PlayerHand getCurrentWinner() {
+    public HandRanking getCurrentWinner() {
         return currentWinner;
     }
 
@@ -103,7 +71,7 @@ public class GameEngine {
      *
      * @param currentWinner the current winner
      */
-    public void setCurrentWinner(PlayerHand currentWinner) {
+    public void setCurrentWinner(HandRanking currentWinner) {
         this.currentWinner = currentWinner;
     }
 
@@ -111,20 +79,25 @@ public class GameEngine {
      * Compute outcome.
      */
     protected void computeOutcome() {
-        players.sort(PlayerHand::compareTo);
-        final PlayerHand playerHand1 = players.get(players.size() - 1);
-        final PlayerHand playerHand2 = players.get(players.size() - 2);
+        results.sort(HandRanking::compareTo);
+        final HandRanking playerHand1 = results.get(results.size() - 1);
+        final HandRanking playerHand2 = results.get(results.size() - 2);
         if(playerHand1.compareTo(playerHand2)>0){
             // if No TIE determine the winner
             currentWinner = playerHand1;
         }else{
-            final List<Card> cards1 = playerHand1.getCards().stream().filter(Card::isFree).collect(Collectors.toList());
-            final List<Card> cards2 = playerHand2.getCards().stream().filter(Card::isFree).collect(Collectors.toList());
+            final List<Card> cards1 = filterOnFreeCard(playerHand1);
+            final List<Card> cards2 = filterOnFreeCard(playerHand2);
             final Integer compareTie = ScoreUtils.compareTie(cards1, cards2);
             if(compareTie !=0){
-                currentWinner=players.get(players.size() - compareTie);
+                currentWinner=results.get(results.size() - compareTie);
             }
         }
+    }
+
+    private List<Card> filterOnFreeCard(HandRanking playerHand1) {
+        return playerHand1.getCards().stream().filter(Card::isFree).collect(
+            toList());
     }
 
 
